@@ -1,0 +1,20 @@
+{
+  "name": "@bs-oak/ext",
+  "version": "0.1.0",
+  "scripts": {
+    "clean": "bsb -clean-world",
+    "build": "bsb -make-world",
+    "watch": "bsb -make-world -w",
+    "test": "npm run build && jest"
+  },
+  "keywords": [
+    "BuckleScript"
+  ],
+  "author": "Erik Lott",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@glennsl/bs-jest": "^0.4.6",
+    "bs-platform": "^4.0.18"
+  }
+}
