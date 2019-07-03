@@ -2,6 +2,10 @@ module type S = sig
   include Map.S
   val safe_find: key -> 'a t -> 'a option
 
+  val from_list: (key * 'a) list -> 'a t
+
+  val union: 'a t -> 'a t -> 'a t
+
   val merge: 
     (key -> 'a -> 'result -> 'result) ->
     (key -> 'a -> 'b -> 'result -> 'result) ->
@@ -20,6 +24,12 @@ module Make = functor (Ord: Map.OrderedType) -> struct
     try Some (Map.find k m)
     with Not_found -> None    
  
+  let from_list pairs =
+    List.fold_left (fun t (k, v) -> Map.add k v t) Map.empty pairs
+
+  let union t1 t2 =
+    Map.fold Map.add t1 t2
+
   let merge left_step both_step right_step left_map right_map initial_result =
     let rec step_state r_key r_value (list, result) =
       match list with

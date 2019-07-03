@@ -26,8 +26,7 @@ let () = describe "Ext_map" (fun () ->
             let map1 = 
                 StringMap.empty
                 |> StringMap.add "day" "day"
-                |> StringMap.add "color" "color"
-                
+                |> StringMap.add "color" "color"                
             in
 
             let map2 = 
@@ -44,5 +43,66 @@ let () = describe "Ext_map" (fun () ->
         );     
     );
 
+    describe "#from_list" (fun () ->  
+        test "returns map from list" (fun () -> 
+            expect (
+                ["a", 1; "b", 2; "c", 3; "b", 4]
+                |> StringMap.from_list
+            ) 
+            |> toEqual( 
+                StringMap.empty
+                |> StringMap.add "a" 1
+                |> StringMap.add "b" 4
+                |> StringMap.add "c" 3
+            )
+        )
+    );
 
+     describe "#union" (fun () ->  
+        test "joins to maps" (fun () -> 
+            let t1 =
+                StringMap.empty
+                |> StringMap.add "a" 1
+                |> StringMap.add "b" 2
+            in
+
+            let t2 =
+                StringMap.empty
+                |> StringMap.add "c" 3
+                |> StringMap.add "d" 4
+            in       
+
+            let t3 =
+                StringMap.empty
+                |> StringMap.add "a" 1
+                |> StringMap.add "b" 2
+                |> StringMap.add "c" 3
+                |> StringMap.add "d" 4
+            in     
+
+            expect (StringMap.union t1 t2 |> StringMap.bindings) |> toEqual (StringMap.bindings t3)
+        );
+        test "key collisions give preference to t1" (fun () -> 
+            let t1 =
+                StringMap.empty
+                |> StringMap.add "a" 1
+                |> StringMap.add "b" 2
+            in
+
+            let t2 =
+                StringMap.empty
+                |> StringMap.add "b" 3
+                |> StringMap.add "c" 4
+            in       
+
+            let t3 =
+                StringMap.empty
+                |> StringMap.add "a" 1
+                |> StringMap.add "b" 2
+                |> StringMap.add "c" 4
+            in     
+
+            expect (StringMap.union t1 t2 |> StringMap.bindings) |> toEqual (StringMap.bindings t3)
+        )
+    )
 )
